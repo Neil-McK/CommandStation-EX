@@ -1,6 +1,6 @@
 /*
  *  © 2021, Chris Harlow, Neil McKechnie. All rights reserved.
- *  
+ *
  *  This file is part of CommandStation-EX
  *
  *  This is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@
  */
 
 ////////////////////////////////////////////////////////////////////////////////////
-// This implementation is designed to be #included ONLY ONCE in the .ino 
+// This implementation is designed to be #included ONLY ONCE in the .ino
 //
 // It will create a driver implemntation and a shim class implementation.
 // This means that other classes can reference the shim without knowing
@@ -28,28 +28,33 @@
 #ifndef LCD_Implementation_h
 #define LCD_Implementation_h
 #include <Wire.h>
+
 #include "LCDDisplay.h"
-  
-LCDDisplay * LCDDisplay::lcdDisplay=0;
+
+LCDDisplay* LCDDisplay::lcdDisplay = 0;
 
 // Implement the LCDDisplay shim class as a singleton.
-// Notice that the LCDDisplay class declaration (LCDDisplay.h) is independent of the library
-// but the implementation is compiled here with dependencies on LCDDriver which is 
-// specific to the library in use.
-// Thats the workaround to the drivers not all implementing a common interface. 
- 
-#if defined(OLED_DRIVER) 
-  #include "LCD_OLED.h"
-  #define CONDITIONAL_LCD_START for (LCDDisplay * dummy=new LCDDisplay();dummy!=NULL; dummy=dummy->loop2(true)) 
-  
+// Notice that the LCDDisplay class declaration (LCDDisplay.h) is independent of
+// the library but the implementation is compiled here with dependencies on
+// LCDDriver which is specific to the library in use. Thats the workaround to
+// the drivers not all implementing a common interface.
 
-#elif defined(LCD_DRIVER)  
-  #include "LCD_LCD.h"      
-  #define CONDITIONAL_LCD_START for (LCDDisplay * dummy=new LCDDisplay();dummy!=NULL; dummy=dummy->loop2(true))  
+#if defined(OLED_DRIVER)
+#include "LCD_OLED.h"
+#define CONDITIONAL_LCD_START                               \
+  for (LCDDisplay* dummy = new LCDDisplay(); dummy != NULL; \
+       dummy = dummy->loop2(true))
 
-#else 
-  #include "LCD_NONE.h"
-  #define CONDITIONAL_LCD_START if (true) /* NO LCD CONFIG, but do the LCD macros to get DIAGS */      
+#elif defined(LCD_DRIVER)
+#include "LCD_LCD.h"
+#define CONDITIONAL_LCD_START                               \
+  for (LCDDisplay* dummy = new LCDDisplay(); dummy != NULL; \
+       dummy = dummy->loop2(true))
+
+#else
+#include "LCD_NONE.h"
+#define CONDITIONAL_LCD_START \
+  if (true) /* NO LCD CONFIG, but do the LCD macros to get DIAGS */
 #endif
 
-#endif // LCD_Implementation_h
+#endif  // LCD_Implementation_h

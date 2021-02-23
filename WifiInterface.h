@@ -1,7 +1,7 @@
 /*
  *  © 2020, Chris Harlow. All rights reserved.
  *  © 2020, Harald Barth.
- *  
+ *
  *  This file is part of CommandStation-EX
  *
  *  This is free software: you can redistribute it and/or modify
@@ -19,35 +19,34 @@
  */
 #ifndef WifiInterface_h
 #define WifiInterface_h
-#include "FSH.h"
-#include "DCCEXParser.h"
 #include <Arduino.h>
 #include <avr/pgmspace.h>
 
+#include "DCCEXParser.h"
+#include "FSH.h"
+
 enum wifiSerialState { WIFI_NOAT, WIFI_DISCONNECTED, WIFI_CONNECTED };
 
-class WifiInterface
-{
-
-public:
-  static bool setup(long serial_link_speed, 
-                          const FSH *wifiESSID,
-                          const FSH *wifiPassword,
-                          const FSH *hostname,
-                          const int port,
-                          const byte channel);
+class WifiInterface {
+ public:
+  static bool setup(long serial_link_speed, const FSH *wifiESSID,
+                    const FSH *wifiPassword, const FSH *hostname,
+                    const int port, const byte channel);
   static void loop();
   static void ATCommand(const byte *command);
-  
-private:
-  static wifiSerialState setup(Stream &setupStream, const FSH *SSSid, const FSH *password,
-                    const FSH *hostname, int port, byte channel);
+
+ private:
+  static wifiSerialState setup(Stream &setupStream, const FSH *SSSid,
+                               const FSH *password, const FSH *hostname,
+                               int port, byte channel);
   static Stream *wifiStream;
   static DCCEXParser parser;
   static wifiSerialState setup2(const FSH *SSSid, const FSH *password,
-                     const FSH *hostname, int port, byte channel);
-  static bool checkForOK(const unsigned int timeout, bool echo, bool escapeEcho = true);
-  static bool checkForOK(const unsigned int timeout, const FSH *waitfor, bool echo, bool escapeEcho = true);
+                                const FSH *hostname, int port, byte channel);
+  static bool checkForOK(const unsigned int timeout, bool echo,
+                         bool escapeEcho = true);
+  static bool checkForOK(const unsigned int timeout, const FSH *waitfor,
+                         bool echo, bool escapeEcho = true);
   static bool connected;
 };
 #endif
