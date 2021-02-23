@@ -122,9 +122,7 @@ void loop()
   RMFT::loop();
 #endif
 
-  unsigned long startTime = micros();
   LCDDisplay::loop();  // ignored if LCD not in use 
-  unsigned long endTime = micros();
   
 // Optionally report any decrease in memory (will automatically trigger on first call)
 #if ENABLE_FREE_MEM_WARNING
@@ -139,23 +137,26 @@ void loop()
 #endif
 
 #ifdef ENABLE_LOOP_MEASUREMENT
+  static unsigned long startTime = micros();
+  unsigned long endTime = micros();
   static unsigned long maxElapsed = 0;
   static unsigned long totalElapsed = 0;
-  static unsigned int count = 0;
+  static unsigned long count = 0;
   unsigned long elapsed = endTime - startTime;
-  if (elapsed > 50) {
+  //if (elapsed > 20) {
     if (elapsed > maxElapsed) maxElapsed = elapsed;
     count++;
     totalElapsed += elapsed;
-  }
+  //}
   static unsigned long lastOutput = millis();
   if (millis() - lastOutput >= 5000) {
-    DIAG(F("Loop: max=%lus ave=%lus cnt=%d\r\n"), maxElapsed, totalElapsed/count, count);
+    DIAG(F("Loop: max=%lus ave=%lus cnt=%l\r\n"), maxElapsed, totalElapsed/count, count);
     maxElapsed = 0;
     totalElapsed = 0;
     count = 0;
     lastOutput = millis();
   }
+  startTime = micros();
 #endif
 
 }
