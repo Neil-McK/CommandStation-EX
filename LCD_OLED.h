@@ -22,6 +22,7 @@
 // It is NOT a .cpp file to prevent it being compiled and demanding libraries
 // even when not needed.
 
+#include "I2CManager.h"
 #include "SSD1306Ascii.h"
 #include "Wire.h"
 SSD1306AsciiWire LCDDriver;
@@ -30,11 +31,10 @@ SSD1306AsciiWire LCDDriver;
 
 LCDDisplay::LCDDisplay() {
   // Scan for device on 0x3c and 0x3d.
-  Wire.begin();
-  Wire.setClock(400000);  // This should really be done centrally somewhere!!
+  I2CManager.begin();
+  I2CManager.setClock(400000L);  // Set max supported I2C speed
   for (byte address = 0x3c; address <= 0x3d; address++) {
-    Wire.beginTransmission(address);
-    byte error = Wire.endTransmission(true);
+    byte error = I2CManager.exists(address);
     if (!error) {
       // Device found
       DIAG(F("\nOLED display found at 0x%x"), address);

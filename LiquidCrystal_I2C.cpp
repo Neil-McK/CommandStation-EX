@@ -19,6 +19,7 @@
  */
 
 #include "LiquidCrystal_I2C.h"
+#include "I2CManager.h"
 
 #include <inttypes.h>
 #if defined(ARDUINO) && ARDUINO >= 100
@@ -70,8 +71,9 @@ LiquidCrystal_I2C::LiquidCrystal_I2C(uint8_t lcd_Addr, uint8_t lcd_cols,
 void LiquidCrystal_I2C::init() { init_priv(); }
 
 void LiquidCrystal_I2C::init_priv() {
-  Wire.begin();
-  Wire.setClock(400000);  // This should really be done centrally somewhere!!
+  I2CManager.begin();
+  I2CManager.setClock(100000L);    // PCF8574 is limited to 100kHz.
+
   _displayfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
   begin(_cols, _rows);
 }
